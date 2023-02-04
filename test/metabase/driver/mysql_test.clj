@@ -194,7 +194,7 @@
   {:password             "bad-password"
    :characterSetResults  "UTF8"
    :characterEncoding    "UTF8"
-   :classname            "org.mariadb.jdbc.Driver"
+   :classname            "com.mysql.jdbc.Driver"
    :subprotocol          "mysql"
    :zeroDateTimeBehavior "convertToNull"
    :user                 "cam"

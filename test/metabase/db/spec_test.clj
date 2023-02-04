@@ -48,7 +48,7 @@
            (mdb.spec/spec :postgres {})))))
 
 (defn- default-mysql-spec [db]
-  {:classname                     "org.mariadb.jdbc.Driver"
+  {:classname                     "com.mysql.jdbc.Driver"
    :subprotocol                   "mysql"
    :subname                       (format "//localhost:3306/%s" db)})
 
