@@ -21,6 +21,14 @@ RUN git config --global --add safe.directory /home/node
 
 RUN INTERACTIVE=false CI=true MB_EDITION=$MB_EDITION bin/build.sh :version ${VERSION}
 
+WORKDIR /root/.m2/repository/org/mariadb/jdbc/mariadb-java-client/2.7.6
+RUN rm ./mariadb-java-client-2.7.6.jar
+COPY ./mariadb-java-client-2.7.6.jar ./mariadb-java-client-2.7.6.jar
+RUN sha1sum mariadb-java-client-2.7.6.jar | awk '{print $1}' > mariadb-java-client-2.7.6.jar.sha1
+
+WORKDIR /home/node
+RUN INTERACTIVE=false CI=true MB_EDITION=$MB_EDITION bin/build.sh
+
 # ###################
 # # STAGE 2: runner
 # ###################
@@ -47,6 +55,12 @@ RUN apk add -U bash fontconfig curl font-noto font-noto-arabic font-noto-hebrew 
 # add Metabase script and uberjar
 COPY --from=builder /home/node/target/uberjar/metabase.jar /app/
 COPY bin/docker/run_metabase.sh /app/
+COPY ck.jar /plugins/clickhouse.metabase-driver.jar
+RUN chmod 744 /plugins/clickhouse.metabase-driver.jar
+
+# version
+ENV METABASE_VERSION=0.46.0
+ENV METABASE_CLICKHOUSE_DRIVER_VERSION=1.1.2
 
 # expose our default runtime port
 EXPOSE 3000
